@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import com.golden.gamedev.object.SpriteGroup;
@@ -15,12 +16,12 @@ public class EnemyGenerator
 		r = new Random();
 	}
 	
-	public void createEnemies(int width, long currentTime, SpriteGroup enemies, SpriteGroup bullets)
+	public void createEnemies(int width, long currentTime, SpriteGroup enemies, SpriteGroup bullets, BufferedImage i, BufferedImage s)
 	{
 		if (currentTime - lastTime > delayTime)
 		{
 			int row = r.nextInt(9)+1;
-			Enemy en = new Enemy(bullets);
+			Enemy en = new Enemy(i, s, bullets);
 			en.setLocation(width-100, 800/row+200);
 			
 			double xSpeed = r.nextInt(100)/100.0;

@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -12,32 +13,16 @@ import com.golden.gamedev.object.SpriteGroup;
 public class Enemy extends Pokemon
 {
 	private Random r;
-	
-	private static BufferedImage i;
-	
-	static{	
-		try {
-			File f = new File("C:\\Users\\Robert\\workspace\\Project3Part1\\src\\resources\\Charmander.png");
-			
-			i = ImageIO.read(f);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		}
-	
-	public Enemy(SpriteGroup bullets)
-	{
-		this(i, bullets);
-		r = new Random();
-	}
+	private BufferedImage bullets;
 	
 	
-	public Enemy(BufferedImage i, SpriteGroup bullets) 
+	public Enemy(BufferedImage i, BufferedImage s, SpriteGroup bullets) 
 	{
 		super(i, bullets);
 		setHealth(100);
 		setFireRate(800);
+		this.bullets = s;
+		r = new Random();
 	}
 	
 	public void fire(long elapsedTime)
@@ -46,7 +31,7 @@ public class Enemy extends Pokemon
 		
 		if (this.canShoot(currentTime))
 		{
-			FireBall fire = new FireBall(this);
+			FireBall fire = new FireBall(bullets, this);
 			
 			double xSpeed = r.nextInt(100)/100.0;
 			double ySpeed = (r.nextInt(100)/100.0) - (r.nextInt(100)/100.0);

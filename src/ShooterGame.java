@@ -2,7 +2,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 import com.golden.gamedev.*;
 import com.golden.gamedev.engine.timer.SystemTimer;
@@ -30,6 +36,11 @@ public class ShooterGame extends GameObject
 	private static String statusMessage;
 	private static String type = "Shooter";
 	
+	private BufferedImage fireBall;
+	private BufferedImage Charmander;
+	
+
+	
 	public ShooterGame(GameEngine parent)
 	{
 		super(parent);
@@ -56,6 +67,9 @@ public class ShooterGame extends GameObject
 		background = new ColorBackground(Color.BLACK, 1280, 800);
 		myTimer = new SystemTimer();
 		startTime = myTimer.getTime();
+		
+		fireBall = getImage("resources/FireBall.png");
+		Charmander = getImage("resources/Charmander.png");
 		
 		initBullets();
 		initShip();
@@ -146,7 +160,7 @@ public class ShooterGame extends GameObject
 	
 	public void createAndFire(long elapsedTime)
 	{
-		   en.createEnemies(getWidth(), myTimer.getTime(), ENEMY_GROUP, ENEMY_BULLETS);
+		   en.createEnemies(getWidth(), myTimer.getTime(), ENEMY_GROUP, ENEMY_BULLETS, Charmander, fireBall);
 		    
 			 Sprite[] sprites = ENEMY_GROUP.getSprites();
 			 

@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 import com.golden.gamedev.GameEngine;
 import com.golden.gamedev.GameObject;
@@ -42,6 +43,9 @@ public class SurvivalMode extends GameObject
 	private static String statusMessage;
 	private static String type = "Survival";
 	
+	private BufferedImage fireBall;
+	private  BufferedImage Charmander;
+	
 	public static String getStatus()
 	{
 		return statusMessage;
@@ -63,6 +67,9 @@ public class SurvivalMode extends GameObject
 		background = new ColorBackground(Color.BLACK, 1280, 800);
 		myTimer = new SystemTimer();
 		startTime = myTimer.getTime();
+		
+		fireBall = getImage("resources/FireBall.png");
+		Charmander = getImage("resources/Charmander.png");
 		
 		initBullets();
 		initShip();
@@ -151,7 +158,7 @@ public class SurvivalMode extends GameObject
 	
 	public void createAndFire(long elapsedTime)
 	{
-		   en.createEnemies(getWidth(), myTimer.getTime(), ENEMY_GROUP, ENEMY_BULLETS);
+		   en.createEnemies(getWidth(), myTimer.getTime(), ENEMY_GROUP, ENEMY_BULLETS, Charmander, fireBall);
 		    
 			 Sprite[] sprites = ENEMY_GROUP.getSprites();
 			 
