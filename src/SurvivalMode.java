@@ -99,6 +99,7 @@ public class SurvivalMode extends GameObject
 		myShip = new Squirtle(getImage("resources/Squirtle.png"), BULLET_GROUP);
 		myShip.setLocation(getWidth() / 2 - myShip.getWidth() / 2, 
                              getHeight() / 2 - myShip.getHeight() / 2);
+		myShip.setHealth(300);
 
 		SQUIRTLE_GROUP.add(myShip);
 	}

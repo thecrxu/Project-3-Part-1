@@ -29,10 +29,10 @@ public class IntroMenu extends GameObject
 
 	public void initResources()
 	{
-		left = new Sprite(getImage("src\\resources\\CharmanderRight.png"));
-		right = new Sprite(getImage("C:\\Users\\Robert\\workspace\\Project3Part1\\src\\resources\\Charmander.png"));
-		left2 = new Sprite(getImage("src\\resources\\CharmanderRight.png"));
-		right2 = new Sprite(getImage("C:\\Users\\Robert\\workspace\\Project3Part1\\src\\resources\\Charmander.png"));
+		left = new Sprite(getImage("resources/CharmanderRight.png"));
+		right = new Sprite(getImage("resources/Charmander.png"));
+		left2 = new Sprite(getImage("resources/CharmanderRight.png"));
+		right2 = new Sprite(getImage("resources/Charmander.png"));
 		
 		left.setLocation(0,0);
 		left2.setLocation(0, 682);
@@ -60,7 +60,8 @@ public class IntroMenu extends GameObject
 				GameFont.CENTER, 600, 300, 20);
 		f.drawString(pen, "Press escape to exit the game", GameFont.CENTER, 600, 400, 20);
 		f.drawString(pen, "In score mode, kill as many enemies as possible in 30 seconds", GameFont.CENTER, 600, 500, 20);
-		f.drawString(pen, "In surivival mode, avoid death for 30 seconds, you may not attack", GameFont.CENTER, 600, 600, 20);
+		f.drawString(pen, "In surivival mode, avoid death for 30 seconds, you cannot attack", GameFont.CENTER, 600, 600, 20);
+		f.drawString(pen,  "however, you have 50% more health", GameFont.CENTER, 600, 600, 20);
 	}
 
 

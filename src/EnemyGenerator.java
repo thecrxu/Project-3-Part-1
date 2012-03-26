@@ -30,7 +30,7 @@ public class EnemyGenerator
 
 			enemies.add(en);
 			lastTime = currentTime;
-			delayTime -= 40;
+			delayTime -= 60;
 		}
 	}
 }
