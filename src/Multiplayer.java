@@ -151,21 +151,32 @@ public class Multiplayer extends GameObject
 	        processKeyPresses(elapsedTime);
 
 	        manageSprites();
-
 	        
-	        if (SQUIRTLE_GROUP.getActiveSprite() == null)
+	        System.out.println(SQUIRTLE_GROUP.getActiveSprite() + " " + ENEMY_GROUP.getActiveSprite());
+	        
+	        if (SQUIRTLE_GROUP.getActiveSprite() == null && ENEMY_GROUP.getActiveSprite() == null)
 	        {
-	        	statusMessage = "Charmander has prevailed";
+	        	statusMessage = "Both combatants have perished";
 	        	parent.nextGameID = 3;
 	        	finish();
 	        }
-	        
-	        if (ENEMY_GROUP.getActiveSprite() == null)
+	        else
 	        {
-	        	statusMessage = "Squirtle has prevailed";
-	        	parent.nextGameID = 3;
-	        	finish();
-	        }
+	        	 if (SQUIRTLE_GROUP.getActiveSprite() == null)
+	 	        {
+	 	        	statusMessage = "Charmander has prevailed";
+	 	        	parent.nextGameID = 3;
+	 	        	finish();
+	 	        }
+	 	        
+	 	        if (ENEMY_GROUP.getActiveSprite() == null)
+	 	        {
+	 	        	statusMessage = "Squirtle has prevailed";
+	 	        	parent.nextGameID = 3;
+	 	        	finish();
+	 	        }
+	        }   
+	       
 	    }
 	 
 	 public void manageSprites()
