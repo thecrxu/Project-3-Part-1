@@ -3,21 +3,29 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Random;
 
-import javax.imageio.ImageIO;
-
-import com.golden.gamedev.*;
+import com.golden.gamedev.GameEngine;
+import com.golden.gamedev.GameObject;
 import com.golden.gamedev.engine.timer.SystemTimer;
-import com.golden.gamedev.object.*;
-import com.golden.gamedev.object.background.*;
+import com.golden.gamedev.object.Background;
+import com.golden.gamedev.object.CollisionManager;
+import com.golden.gamedev.object.GameFont;
+import com.golden.gamedev.object.PlayField;
+import com.golden.gamedev.object.Sprite;
+import com.golden.gamedev.object.SpriteGroup;
+import com.golden.gamedev.object.background.ColorBackground;
 
-public class ShooterGame extends GameObject
+
+public class Multiplayer extends GameObject
 {
-	private static Pokemon myShip;
+
+	public Multiplayer(GameEngine parent) 
+	{
+		super(parent);
+	}
+	
+	private static Pokemon squirtle;
+	private static Pokemon charmander;
 	private SpriteGroup BULLET_GROUP;
 	private Background background;
 	private SystemTimer myTimer;
@@ -34,17 +42,10 @@ public class ShooterGame extends GameObject
 	private EnemyGenerator en;
 	private CollisionManager charType;
 	private static String statusMessage;
-	private static String type = "Shooter";
+	private static String type = "Multiplayer";
 	
 	private BufferedImage fireBall;
 	private BufferedImage Charmander;
-	
-
-	
-	public ShooterGame(GameEngine parent)
-	{
-		super(parent);
-	}
 	
 	public static String getType()
 	{
@@ -58,9 +59,8 @@ public class ShooterGame extends GameObject
 	
 	public static int getScore()
 	{
-		return myShip.getScore();
+		return squirtle.getScore();
 	}
-
 
 	public void initResources() 
 	{
@@ -75,7 +75,6 @@ public class ShooterGame extends GameObject
 		initShip();
 		initEnemies();
 		initFont();
-		initPowerUps();
 		initCollisions();
 		initPlayField();
 	}
@@ -88,26 +87,19 @@ public class ShooterGame extends GameObject
 		field.addGroup(ENEMY_GROUP);
 		field.addGroup(BULLET_GROUP);
 		field.addGroup(ENEMY_BULLETS);
-		field.addGroup(POWERUP_GROUP);
-		field.addCollisionGroup(SQUIRTLE_GROUP, POWERUP_GROUP, powerType);
 		field.addCollisionGroup(BULLET_GROUP, ENEMY_GROUP, collisionType);
 		field.addCollisionGroup(SQUIRTLE_GROUP, ENEMY_BULLETS, playerType);
 		field.addCollisionGroup(SQUIRTLE_GROUP, ENEMY_GROUP, charType);
 	}
 	
-	public void initPowerUps()
-	{
-		POWERUP_GROUP = new SpriteGroup("PowerUp Group");
-	}
-	
 	public void initShip()
 	{
 		SQUIRTLE_GROUP = new SpriteGroup("Squirtle Group");
-		myShip = new Squirtle(getImage("resources/Squirtle.png"), BULLET_GROUP);
-		myShip.setLocation(getWidth() / 2 - myShip.getWidth() / 2, 
-                             getHeight() / 2 - myShip.getHeight() / 2);
+		squirtle = new Squirtle(getImage("resources/Squirtle.png"), BULLET_GROUP);
+		squirtle.setLocation(0, 
+                             getHeight() / 2 - squirtle.getHeight() / 2);
 
-		SQUIRTLE_GROUP.add(myShip);
+		SQUIRTLE_GROUP.add(squirtle);
 	}
 	
 	public void initBullets()
@@ -119,7 +111,6 @@ public class ShooterGame extends GameObject
 	public void initCollisions()
 	{
 		collisionType = new ShotToSpriteCollision();
-		powerType = new PowerUpCollision();
 		playerType = new SquirtleFireCollision();
 		charType = new SquirtleCharCollision();
 	}
@@ -127,7 +118,12 @@ public class ShooterGame extends GameObject
 	public void initEnemies()
 	{
 		ENEMY_GROUP = new SpriteGroup("Enemy Group");
-		en = new EnemyGenerator();	    
+		charmander = new Enemy(Charmander, fireBall, ENEMY_BULLETS);
+		charmander.setHealth(200);
+		charmander.setFireRate(500);
+		charmander.setLocation(getWidth()  - charmander.getWidth() , 
+                getHeight() / 2 - charmander.getHeight() / 2);
+		ENEMY_GROUP.add(charmander);
 	}
 	
 	public void initFont()
@@ -141,60 +137,33 @@ public class ShooterGame extends GameObject
 		field.render(pen);
 		
 		pen.setColor(Color.RED);
-		f.drawString(pen, "Health: " + myShip.getHealth(), GameFont.LEFT, 40, 0, 20);
+		f.drawString(pen, "Squirtle Health: " + squirtle.getHealth(), GameFont.LEFT, 40, 0, 20);
 		
 		pen.setColor(Color.BLUE);
-		f.drawString(pen, "Score: " + myShip.getScore() , GameFont.LEFT, 370, 0, 20);
-		
-		pen.setColor(Color.YELLOW);
-		f.drawString(pen, "Time: " + (myTimer.getTime()-startTime)/1000 , GameFont.RIGHT, 700, 0, 20);
+		f.drawString(pen, "Charmander Health " + charmander.getHealth() , GameFont.LEFT, 370, 0, 20);
 	}
-	
-	public void processPowerUps()
-	{
-	    if(myShip.getPowerUps().size() > 0)
-	    {
-	    	POWERUP_GROUP.add(myShip.getPowerUps().remove(0));
-	    }
-	}
-	
-	public void createAndFire(long elapsedTime)
-	{
-		   en.createEnemies(getWidth(), myTimer.getTime(), ENEMY_GROUP, ENEMY_BULLETS, Charmander, fireBall);
-		    
-			 Sprite[] sprites = ENEMY_GROUP.getSprites();
-			 
-			 for (Sprite sp: sprites)
-			 {
-				 if (sp != null && sp.isActive())
-					 ((Enemy)sp).fire(elapsedTime);
-			 }
-	}
+
 
 	 public void update(long elapsedTime)
 	 {
-	
-		 	createAndFire(elapsedTime);
-		 	
-		 	processPowerUps();
-
 	        field.update(elapsedTime);
 
 	        processKeyPresses(elapsedTime);
 
 	        manageSprites();
-	        
-	        if ((myTimer.getTime()-startTime)/1000 >= 30)
-	        {
-	        	statusMessage = "Congratulations, you repelled the Charmander invasion";
-	        	parent.nextGameID = 2;
-	        	finish();
-	        }
+
 	        
 	        if (SQUIRTLE_GROUP.getActiveSprite() == null)
 	        {
-	        	statusMessage = "You were killed before time ran out";
-	        	parent.nextGameID = 2;
+	        	statusMessage = "Charmander has prevailed";
+	        	parent.nextGameID = 3;
+	        	finish();
+	        }
+	        
+	        if (ENEMY_GROUP.getActiveSprite() == null)
+	        {
+	        	statusMessage = "Squirtle has prevailed";
+	        	parent.nextGameID = 3;
 	        	finish();
 	        }
 	    }
@@ -202,43 +171,76 @@ public class ShooterGame extends GameObject
 	 public void manageSprites()
 	 {
 		    removeSprites(BULLET_GROUP);
-		    removeSprites(ENEMY_GROUP);
 		    removeSprites(ENEMY_BULLETS);
-		    removeSprites(POWERUP_GROUP);
 	 }
 	 
 	 public void processKeyPresses(long elapsedTime)
 	 {
 		 if (keyDown(KeyEvent.VK_S)) 
 	        {
-	        	if(myShip.getY() + myShip.getHeight() < getHeight() )
-	        		myShip.move(0, 0.5*elapsedTime);
+	        	if(squirtle.getY() + squirtle.getHeight() < getHeight() )
+	        		squirtle.move(0, 0.5*elapsedTime);
 	        }
 	        if (keyDown(KeyEvent.VK_W)) 
 	        {
-	        	if(myShip.getY() > 0 )
-	        		myShip.move(0, -0.5*elapsedTime);
+	        	if(squirtle.getY() > 0 )
+	        		squirtle.move(0, -0.5*elapsedTime);
 	        }
 	        if (keyDown(KeyEvent.VK_D)) 
 	        {
-	        	if(myShip.getX() +myShip.getWidth() < getWidth())
-	        		myShip.move(0.5*elapsedTime, 0);
+	        	if(squirtle.getX() + squirtle.getWidth() < getWidth())
+	        		squirtle.move(0.5*elapsedTime, 0);
 	        }
 	        if (keyDown(KeyEvent.VK_A)) 
 	        {
-	        	if(myShip.getX() > 0)
-	        		myShip.move(-0.5*elapsedTime, 0);
+	        	if(squirtle.getX() > 0)
+	        		squirtle.move(-0.5*elapsedTime, 0);
 	        }
 	        
 	        if (keyDown(KeyEvent.VK_SPACE))
 	        {
 	        	long currentTime = myTimer.getTime();
-	        	if (myShip.canShoot(currentTime))
+	        	if (squirtle.canShoot(currentTime))
 	        	{
-	        	Sprite bullet = new Bullet(getImage("resources/BubbleMult.png"), myShip);
+	        	Sprite bullet = new Bullet(getImage("resources/BubbleMult.png"), squirtle);
 
 	        	BULLET_GROUP.add(bullet);
-	        	myShip.setLastShot(currentTime);
+	        	squirtle.setLastShot(currentTime);
+	        	}
+	        }
+	        if (keyDown(KeyEvent.VK_DOWN)) 
+	        {
+	        	if(charmander.getY() + charmander.getHeight() < getHeight() )
+	        		charmander.move(0, 0.5*elapsedTime);
+	        }
+	        if (keyDown(KeyEvent.VK_UP)) 
+	        {
+	        	if(charmander.getY() > 0 )
+	        		charmander.move(0, -0.5*elapsedTime);
+	        }
+	        if (keyDown(KeyEvent.VK_RIGHT)) 
+	        {
+	        	if(charmander.getX() + charmander.getWidth() < getWidth())
+	        		charmander.move(0.5*elapsedTime, 0);
+	        }
+	        if (keyDown(KeyEvent.VK_LEFT)) 
+	        {
+	        	if(charmander.getX() > 0)
+	        		charmander.move(-0.5*elapsedTime, 0);
+	        }
+	        
+	        if (keyDown(KeyEvent.VK_ENTER))
+	        {
+	        	long currentTime = myTimer.getTime();
+	        	if (charmander.canShoot(currentTime))
+	        	{
+	        	Sprite bullet = new Bullet(fireBall, charmander);
+	        	
+	        	bullet.setSpeed(-.8,0);
+	        	
+	        	ENEMY_BULLETS.add(bullet);
+	        	
+	        	charmander.setLastShot(currentTime);
 	        	}
 	        }
 	 }

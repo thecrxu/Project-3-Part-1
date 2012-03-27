@@ -56,12 +56,12 @@ public class IntroMenu extends GameObject
 	{
 		field.render(pen);
 		pen.setColor(Color.BLUE);
-		f.drawString(pen, "Welcome to Charmander attack," +  " \npress 1 for score mode and 2 for survival mode" , 
+		f.drawString(pen, "Welcome to Charmander attack," +  " \npress 1 for score mode and 2 for multiplayer mode" , 
 				GameFont.CENTER, 600, 300, 20);
 		f.drawString(pen, "Press escape to exit the game", GameFont.CENTER, 600, 400, 20);
 		f.drawString(pen, "In score mode, kill as many enemies as possible in 30 seconds", GameFont.CENTER, 600, 500, 20);
-		f.drawString(pen, "In surivival mode, avoid death for 30 seconds, you cannot attack", GameFont.CENTER, 600, 600, 20);
-		f.drawString(pen,  "however, you have 50% more health", GameFont.CENTER, 600, 650, 20);
+		f.drawString(pen, "In score mode control your character with WASD and use space to fire", GameFont.CENTER, 600, 600, 20);
+		f.drawString(pen,  "In multiplayer mode, player 2 uses the arrow keys to move and enter to fire", GameFont.CENTER, 600, 650, 20);
 	}
 
 

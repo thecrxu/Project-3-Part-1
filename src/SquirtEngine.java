@@ -19,9 +19,9 @@ public class SquirtEngine extends GameEngine
           case 2: 
         	  return new EndGameScreen(this, ShooterGame.getScore(), ShooterGame.getStatus(), ShooterGame.getType());
           case 3:
-        	  return new EndGameScreen(this, SurvivalMode.getScore(), SurvivalMode.getStatus(), SurvivalMode.getType());
+        	  return new EndGameScreen(this, Multiplayer.getScore(), Multiplayer.getStatus(), Multiplayer.getType());
           case 4:
-        	  return new SurvivalMode(this);
+        	  return new Multiplayer(this);
        }	  
 		  return null;
 	}
